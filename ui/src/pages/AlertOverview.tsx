@@ -29,6 +29,8 @@ export const AlertOverview: React.FC = () => {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+      position: "sticky",
+      top: 0,
     },
   });
 

@@ -14,7 +14,6 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
   const {skip, limit, count, onPageChange, onLimitChange} = props;
   const styles = mergeStyleSets({
     pagination: {
-      minWidth: "160px",
       gap: 10,
       display: "flex",
       alignItems: "center",
@@ -25,6 +24,7 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
         backgroundColor: '#fff',
         padding: '0.5rem',
         cursor: 'pointer',
+        minWidth: '34px',
       },
       '& > button:disabled, button[disabled]': {
         backgroundColor: '#cccccc',
@@ -43,6 +43,7 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
   })
 
   return <div className={styles.pagination}>
+    <span>Page: {skip / limit + 1}</span>
     <Dropdown 
       options={dropdownOptions} 
       selectedKey={limit}

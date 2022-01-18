@@ -1,8 +1,9 @@
 import {mergeStyleSets} from '@fluentui/react';
 import React, {useMemo} from 'react';
-import {Alert} from '../services/alert.service';
+import {Alert, AlertService} from '../services/alert.service';
 import {Label} from './Label';
 import {useNavigate} from 'react-router-dom';
+import {Helpers} from '../services/helpers';
 
 export interface IAlertCardProps {
   alert: Alert;
@@ -42,18 +43,10 @@ export const AlertCard: React.FC<IAlertCardProps> = (props) => {
     },
   });
 
-  const title = useMemo(() => {
-    return alert.labels.alertname ?? "No title";
-  }, [alert]);
-
-  const summary = useMemo(() => {
-    return alert.annotations.summary ?? "No summary";
-  }, [alert]);
-
-  const date = useMemo(() => {
-    const date = new Date(alert.startsAt);
-    return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-  }, [alert]);
+  const title = useMemo(() => AlertService.getTitle(alert), [alert]);
+  const summary = useMemo(() => AlertService.getSummary(alert), [alert]);
+  const date = useMemo(() => Helpers.formatDate(AlertService.getStartsAt(alert)), [alert]);
+  const status = useMemo(() => AlertService.getStatus(alert), [alert]);
 
   const labels = useMemo(() => {
     return Object.keys(alert.labels)
@@ -68,7 +61,7 @@ export const AlertCard: React.FC<IAlertCardProps> = (props) => {
 
   return <div onClick={_ => openDetails()} className={styles.alertCard}>
     <div className={styles.headerContainer}>
-      <h2>{title}</h2>
+      <h2>{title} ({status})</h2>
       <span className={'date'}>{date}</span>
     </div>
     <span>{summary}</span>
