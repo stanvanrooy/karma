@@ -94,7 +94,6 @@ def get_alerts():
             queryQuery.append(f"WHERE labels LIKE '%{q}%'")
 
     queryQuery = 'AND \n'.join(queryQuery)
-    print(queryQuery)
     alerts = db.execute(f"""SELECT * FROM alerts 
                         {queryQuery}
                         ORDER BY id DESC LIMIT ? OFFSET ?
