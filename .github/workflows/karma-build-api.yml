@@ -20,4 +20,4 @@ jobs:
          password: ${{ secrets.DOCKERHUB_TOKEN }}
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: cd api && docker build -f Dockerfile -t rooysv/karma:${{ steps.get_version.outputs.VERSION }} .
+      run: cd api && docker build -f Dockerfile -t rooysv/karma:${{ steps.get_version.outputs.VERSION }} --push .
