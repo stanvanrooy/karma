@@ -22,4 +22,4 @@ jobs:
     - name: Build the Docker image
       run: cd api && docker build -f Dockerfile -t rooysv/karma:${{ steps.get_version.outputs.VERSION }} .
     - name: Push the Docker image
-      run: cd api && docker push rooysv/karma:${{ steps.get_version.outputs.VERSION }}
+      run: docker push rooysv/karma:${{ steps.get_version.outputs.VERSION }}
