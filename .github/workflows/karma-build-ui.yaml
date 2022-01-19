@@ -1,0 +1,17 @@
+name: Build UI
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Build the Docker image
+      run: cd ui && docker build -f Dockerfile -t rooysv/karma-ui:${{ steps.get_version.outputs.VERSION }} .
