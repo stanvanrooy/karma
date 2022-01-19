@@ -59,7 +59,7 @@ def close_connection(exception):
 
 
 @app.post('/alert')
-def hello_world():
+def add_alert():
     data: models.Webhook = request.get_json()
     db = get_db()
     for alert in data['alerts']:
@@ -82,9 +82,23 @@ def hello_world():
 def get_alerts():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
-
+    query = request.args.get('query', '').split(' ')
     db = get_db()
-    alerts = db.execute("SELECT * FROM alerts ORDER BY id DESC LIMIT ? OFFSET ?", (limit, skip)).fetchall()
+    
+    queryQuery = [];
+    for q in query:
+        if q.startswith('status='):
+            v = q.split('=')[1]
+            queryQuery.append(f"WHERE status LIKE '{v}%'")
+        else:
+            queryQuery.append(f"WHERE labels LIKE '%{q}%'")
+
+    queryQuery = 'AND \n'.join(queryQuery)
+    print(queryQuery)
+    alerts = db.execute(f"""SELECT * FROM alerts 
+                        {queryQuery}
+                        ORDER BY id DESC LIMIT ? OFFSET ?
+                        """, (limit, skip)).fetchall()
 
     ret = []
     for alert in alerts:
@@ -192,7 +206,7 @@ def get_notes():
 @app.get('/alert/<id>/notes')
 def get_alert_notes(id):
     db = get_db()
-    notes = db.execute("SELECT * FROM notes WHERE alertId = ? ORDER BY id", (id)).fetchall()
+    notes = db.execute("SELECT * FROM notes WHERE alertId = ? ORDER BY id", (id, )).fetchall()
 
     ret = []
     for note in notes:

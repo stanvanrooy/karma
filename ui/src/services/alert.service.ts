@@ -11,8 +11,8 @@ export interface Alert {
 }
 
 export class AlertService {
-  public static getMany(skip?: number, limit?: number): Promise<Alert[]> {
-    return fetch(`${BASE_API_URL}/alert?skip=${skip}&limit=${limit}`)
+  public static getMany(skip?: number, limit?: number, query?: string): Promise<Alert[]> {
+    return fetch(`${BASE_API_URL}/alert?skip=${skip}&limit=${limit}&query=${query}`)
       .then(response => response.json());
   }
 
@@ -21,8 +21,8 @@ export class AlertService {
       .then(response => response.json());
   }
 
-  public static count(): Promise<number> {
-    return fetch(`${BASE_API_URL}/alert/count`)
+  public static count(query?: string): Promise<number> {
+    return fetch(`${BASE_API_URL}/alert/count?query=${query}`)
       .then(r => r.json())
       .then(r => r.count);
   }

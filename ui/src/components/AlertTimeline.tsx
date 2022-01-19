@@ -100,16 +100,18 @@ export const AlertTimeline: React.FC<IAlertTimelineProps> = (props) => {
   }
 
   return <div className={styles.itemContainer}>
-    <div className={styles.newNoteContainer}>
-      <TextField 
-        multiline 
-        rows={4} 
-        value={noteText} 
-        onChange={onChangeNoteText} 
-        className={styles.newNote}
-        placeholder="Add a note..." />
-      <DefaultButton iconProps={{ iconName: 'Add' }} onClick={onSubmitNote} />
-    </div>
+    <form>
+      <div className={styles.newNoteContainer}>
+        <TextField 
+          multiline 
+          rows={4} 
+          value={noteText} 
+          onChange={onChangeNoteText} 
+          className={styles.newNote}
+          placeholder="Add a note..." />
+        <DefaultButton iconProps={{ iconName: 'Add' }} onClick={onSubmitNote} />
+      </div>
+    </form>
     {items
       .sort((a, b) => b.date.getTime() - a.date.getTime())
       .map(i => <div className={styles.item}>

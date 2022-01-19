@@ -43,7 +43,7 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
   })
 
   return <div className={styles.pagination}>
-    <span>Page: {skip / limit + 1}</span>
+    <span>Page: {skip / limit + 1} of {Math.round(count / limit)}</span>
     <Dropdown 
       options={dropdownOptions} 
       selectedKey={limit}
