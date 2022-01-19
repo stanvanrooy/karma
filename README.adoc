@@ -1,6 +1,7 @@
 :toc: macro
 :toc-title:
 :toclevels: 9
+:imagesdir: assets
 
 # Karma
-
+image::preview-1.png[]
