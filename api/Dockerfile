@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM python:3.9
 RUN apt-get update 
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y ppa:deadsnakes/ppa
