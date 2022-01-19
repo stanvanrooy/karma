@@ -1,5 +1,6 @@
 from flask import Flask, g, request, Response, jsonify
 from flask_cors import CORS
+from functools import wraps
 import sqlite3
 
 import constants
@@ -58,7 +59,19 @@ def close_connection(exception):
         db.close()
 
 
+def authenticate():
+    def _authenticate(f):
+        @wraps(f)
+        def __authenticate(*args, **kwargs):
+            if request.headers.get('Authorization') != constants.AUTH_TOKEN:
+                return Response(status=401)
+            return f(*args, **kwargs)
+        return __authenticate
+    return _authenticate
+
+
 @app.post('/alert')
+@authenticate()
 def add_alert():
     data: models.Webhook = request.get_json()
     db = get_db()
@@ -79,6 +92,7 @@ def add_alert():
 
 
 @app.get('/alert')
+@authenticate()
 def get_alerts():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
@@ -114,6 +128,7 @@ def get_alerts():
 
 
 @app.get('/alert/count')
+@authenticate()
 def get_alert_count():
     db = get_db()
     count = db.execute("SELECT COUNT(*) FROM alerts").fetchone()[0]
@@ -121,6 +136,7 @@ def get_alert_count():
 
 
 @app.get('/alert/<id>')
+@authenticate()
 def get_alert(id):
     db = get_db()
     alert = db.execute("SELECT * FROM alerts WHERE id = ?", (id,)).fetchone()
@@ -139,6 +155,7 @@ def get_alert(id):
 
 
 @app.delete('/alert/<id>')
+@authenticate()
 def delete_alert(id):
     db = get_db()
     db.execute("DELETE FROM alerts WHERE id = ?", (id,))
@@ -147,6 +164,7 @@ def delete_alert(id):
 
 
 @app.put('/alert/<id>')
+@authenticate()
 def update_alert(id):
     data: models.Alert = request.get_json()
     db = get_db()
@@ -172,6 +190,7 @@ def update_alert(id):
 
 
 @app.post('/note')
+@authenticate()
 def add_note():
     data = request.get_json()
     db = get_db()
@@ -186,6 +205,7 @@ def add_note():
 
 
 @app.get('/note')
+@authenticate()
 def get_notes():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
@@ -203,6 +223,7 @@ def get_notes():
     return jsonify(ret)
 
 @app.get('/alert/<id>/notes')
+@authenticate()
 def get_alert_notes(id):
     db = get_db()
     notes = db.execute("SELECT * FROM notes WHERE alertId = ? ORDER BY id", (id, )).fetchall()
