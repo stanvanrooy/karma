@@ -239,5 +239,5 @@ def get_alert_notes(id):
     return jsonify(ret)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='localhost')
 
