@@ -23,3 +23,8 @@ jobs:
       run: cd ui && docker build -f Dockerfile -t rooysv/karma-ui:${{ steps.get_version.outputs.VERSION }} .
     - name: Push the Docker image
       run: docker push rooysv/karma-ui:${{ steps.get_version.outputs.VERSION }}
+    - name: Retag the Docker image
+      run: docker tag rooysv/karma-ui:${{ steps.get_version.outputs.VERSION }} rooysv/karma-ui:latest
+    - name: Push the Docker image
+      run: docker push rooysv/karma-ui:latest
+

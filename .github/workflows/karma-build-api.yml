@@ -1,5 +1,4 @@
 name: Build API
-
 on:
   release:
     types:
@@ -23,3 +22,8 @@ jobs:
       run: cd api && docker build -f Dockerfile -t rooysv/karma:${{ steps.get_version.outputs.VERSION }} .
     - name: Push the Docker image
       run: docker push rooysv/karma:${{ steps.get_version.outputs.VERSION }}
+    - name: Retag the Docker image
+      run: docker tag rooysv/karma:${{ steps.get_version.outputs.VERSION }} rooysv/karma:latest
+    - name: Push the Docker image
+      run: docker push rooysv/karma:latest
+
