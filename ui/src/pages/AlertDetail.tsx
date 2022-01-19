@@ -87,6 +87,7 @@ export const AlertDetail: React.FC = () => {
     { key: 'firing', text: 'Firing' },
     { key: 'in-review', text: 'In review' },
     { key: 'resolved', text: 'Resolved' },
+    { key: 'false-positive', text: 'False positive' },
   ];
 
   const update = (a: Alert) => {
