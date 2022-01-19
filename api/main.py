@@ -70,7 +70,7 @@ def authenticate():
     return _authenticate
 
 
-@app.post('/alert')
+@app.post('/api/alert')
 @authenticate()
 def add_alert():
     data: models.Webhook = request.get_json()
@@ -91,7 +91,7 @@ def add_alert():
     return Response(status=200)
 
 
-@app.get('/alert')
+@app.get('/api/alert')
 @authenticate()
 def get_alerts():
     skip = int(request.args.get('skip', 0))
@@ -127,7 +127,7 @@ def get_alerts():
     return jsonify(ret)
 
 
-@app.get('/alert/count')
+@app.get('/api/alert/count')
 @authenticate()
 def get_alert_count():
     db = get_db()
@@ -135,7 +135,7 @@ def get_alert_count():
     return jsonify({'count': count})
 
 
-@app.get('/alert/<id>')
+@app.get('/api/alert/<id>')
 @authenticate()
 def get_alert(id):
     db = get_db()
@@ -154,7 +154,7 @@ def get_alert(id):
     })
 
 
-@app.delete('/alert/<id>')
+@app.delete('/api/alert/<id>')
 @authenticate()
 def delete_alert(id):
     db = get_db()
@@ -163,7 +163,7 @@ def delete_alert(id):
     return Response(status=200)
 
 
-@app.put('/alert/<id>')
+@app.put('/api/alert/<id>')
 @authenticate()
 def update_alert(id):
     data: models.Alert = request.get_json()
@@ -189,7 +189,7 @@ def update_alert(id):
     return jsonify(data)
 
 
-@app.post('/note')
+@app.post('/api/note')
 @authenticate()
 def add_note():
     data = request.get_json()
@@ -204,7 +204,7 @@ def add_note():
     return jsonify(data)
 
 
-@app.get('/note')
+@app.get('/api/note')
 @authenticate()
 def get_notes():
     skip = int(request.args.get('skip', 0))
@@ -222,7 +222,7 @@ def get_notes():
         })
     return jsonify(ret)
 
-@app.get('/alert/<id>/notes')
+@app.get('/api/alert/<id>/notes')
 @authenticate()
 def get_alert_notes(id):
     db = get_db()
