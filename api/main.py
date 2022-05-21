@@ -1,9 +1,8 @@
-from flask import Flask, g, request, Response, jsonify
+from flask import Flask, g, request, jsonify
+from flask.wrappers import Response
 from flask_cors import CORS
-from functools import wraps
-import sqlite3
+from common import get_db
 
-import constants
 import models
 
 app = Flask(__name__)
@@ -24,34 +23,6 @@ def replace_status(status: str):
     return status
 
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(constants.DATABASE)
-        try:
-            db.execute("""CREATE TABLE alerts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                status TEXT, 
-                labels TEXT, 
-                annotations TEXT, 
-                startsAt datetime, 
-                endsAt datetime,
-                generatorUrl TEXT
-            )""")
-        except:
-            pass
-        try:
-            db.execute("""CREATE TABLE notes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                alertId INTEGER, 
-                text TEXT, 
-                createdAt datetime DEFAULT (datetime('now','localtime'))
-            )""")
-        except:
-            pass
-    return db
-
-
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -59,19 +30,7 @@ def close_connection(exception):
         db.close()
 
 
-def authenticate():
-    def _authenticate(f):
-        @wraps(f)
-        def __authenticate(*args, **kwargs):
-            if request.headers.get('Authorization') != constants.AUTH_TOKEN:
-                return Response(status=401)
-            return f(*args, **kwargs)
-        return __authenticate
-    return _authenticate
-
-
 @app.post('/api/alert')
-@authenticate()
 def add_alert():
     data: models.Webhook = request.get_json()
     db = get_db()
@@ -92,7 +51,6 @@ def add_alert():
 
 
 @app.get('/api/alert')
-@authenticate()
 def get_alerts():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
@@ -128,7 +86,6 @@ def get_alerts():
 
 
 @app.get('/api/alert/count')
-@authenticate()
 def get_alert_count():
     db = get_db()
     count = db.execute("SELECT COUNT(*) FROM alerts").fetchone()[0]
@@ -136,7 +93,6 @@ def get_alert_count():
 
 
 @app.get('/api/alert/<id>')
-@authenticate()
 def get_alert(id):
     db = get_db()
     alert = db.execute("SELECT * FROM alerts WHERE id = ?", (id,)).fetchone()
@@ -155,7 +111,6 @@ def get_alert(id):
 
 
 @app.delete('/api/alert/<id>')
-@authenticate()
 def delete_alert(id):
     db = get_db()
     db.execute("DELETE FROM alerts WHERE id = ?", (id,))
@@ -164,7 +119,6 @@ def delete_alert(id):
 
 
 @app.put('/api/alert/<id>')
-@authenticate()
 def update_alert(id):
     data: models.Alert = request.get_json()
     db = get_db()
@@ -190,7 +144,6 @@ def update_alert(id):
 
 
 @app.post('/api/note')
-@authenticate()
 def add_note():
     data = request.get_json()
     db = get_db()
@@ -205,7 +158,6 @@ def add_note():
 
 
 @app.get('/api/note')
-@authenticate()
 def get_notes():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
@@ -223,7 +175,6 @@ def get_notes():
     return jsonify(ret)
 
 @app.get('/api/alert/<id>/notes')
-@authenticate()
 def get_alert_notes(id):
     db = get_db()
     notes = db.execute("SELECT * FROM notes WHERE alertId = ? ORDER BY id", (id, )).fetchall()
