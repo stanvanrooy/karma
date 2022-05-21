@@ -10,8 +10,14 @@ class DatabaseConfig:
 
 
 @dataclasses.dataclass
+class AdminConfig:
+    password: str
+
+
+@dataclasses.dataclass
 class Config:
     database: DatabaseConfig
+    admin: AdminConfig
 
 
 def _load_config() -> Config:
@@ -23,9 +29,18 @@ def _load_config() -> Config:
         uri=config["database"]["uri"]
     )
 
-    return Config(database_config)
+    admin_config = AdminConfig(
+        password=config["admin"]["password"]
+    )
+
+    return Config(database_config, admin_config)
 
 
 def init_app(app: Flask):
     config = _load_config()
     app.config["SQLALCHEMY_DATABASE_URI"] = config.database.uri
+
+
+def get_config() -> Config:
+    return _load_config()
+

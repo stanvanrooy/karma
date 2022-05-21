@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import auth
-import common
+import database
 
 
 def _login():
@@ -13,8 +13,7 @@ def _login():
     username = data['username']
     password = data['password']
 
-    db = common.get_db()
-    user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    user = database.db.session.query(database.User).filter_by(username=username).first()
 
     valid_credentials = auth.verify_password(user.password, password)
     if not valid_credentials:

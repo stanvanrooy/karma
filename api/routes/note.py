@@ -1,8 +1,14 @@
-from flask import request, jsonify, Flask
+from flask import request, jsonify, Blueprint
 import database
+from . import common
 
 
-def _add_note():
+n = Blueprint('notes', __name__)
+
+
+@n.route('/', methods=['POST'])
+@common.require_login()
+def add_note():
     data = request.get_json()
     if data is None:
         return jsonify({'error': 'No data received'}), 400
@@ -20,20 +26,11 @@ def _add_note():
     return jsonify(data)
 
 
-def _get_notes():
+@n.route('/', methods=['GET'])
+@common.require_login()
+def get_notes():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
     notes = database.db.session.query(database.Note).offset(skip).limit(limit).all()
     return jsonify(notes)
-
-
-def _get_alert_notes(id):
-    notes = database.db.session.query(database.Note).filter_by(alertId=id).all()
-    return jsonify(notes)
-
-
-def initalize_routes(app: Flask):
-    app.route('/notes', methods=['POST'])(_add_note)
-    app.route('/notes', methods=['GET'])(_get_notes)
-    app.route('/notes/alert/<id>', methods=['GET'])(_get_alert_notes)
 

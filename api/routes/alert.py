@@ -1,9 +1,15 @@
-from flask import request, jsonify, Flask
+from flask import request, jsonify, Blueprint
 from flask.wrappers import Response
 import database
+from . import common
 
 
-def _add_alert():
+a = Blueprint('alert', __name__)
+
+
+@a.route('/', methods=['POST'])
+@common.require_login()
+def add_alert():
     data = request.get_json()
     database.db.session.add(database.Alert(
         **data,
@@ -12,7 +18,9 @@ def _add_alert():
     return Response(status=200)
 
 
-def _get_alerts():
+@a.route('/', methods=['GET'])
+@common.require_login()
+def get_alerts():
     skip = int(request.args.get('skip', 0))
     limit = int(request.args.get('limit', 10))
     query = request.args.get('query', '').split(' ')
@@ -30,13 +38,17 @@ def _get_alerts():
     return jsonify(alerts)
 
 
-def _get_alert_count():
+@a.route('/count', methods=['GET'])
+@common.require_login()
+def get_alert_count():
     return jsonify({
         'count': database.db.session.query(database.Alert).count()
     })
 
 
-def _get_alert(id):
+@a.route('/<int:id>', methods=['GET'])
+@common.require_login()
+def get_alert(id):
     alert = database.db.session.query(database.Alert).filter(database.Alert.id == id).first()
     if alert is None:
         return Response(status=404)
@@ -44,7 +56,9 @@ def _get_alert(id):
     return jsonify(alert)
 
 
-def _delete_alert(id):
+@a.route('/<int:id>', methods=['DELETE'])
+@common.require_login()
+def delete_alert(id):
     alert = database.db.session.query(database.Alert).filter(database.Alert.id == id).first()
     if alert is None:
         return Response(status=404)
@@ -53,7 +67,9 @@ def _delete_alert(id):
     return Response(status=200)
 
 
-def _update_alert(id):
+@a.route('/<int:id>', methods=['PUT'])
+@common.require_login()
+def update_alert(id):
     alert = database.db.session.query(database.Alert).filter(database.Alert.id == id).first()
     if alert is None:
         return Response(status=404)
@@ -64,11 +80,8 @@ def _update_alert(id):
     return jsonify(alert)
 
 
-def initialize_routes(app: Flask):
-    app.route('/api/alert', methods=['POST'])(_add_alert)
-    app.route('/api/alert', methods=['GET'])(_get_alerts)
-    app.route('/api/alert/count', methods=['GET'])(_get_alert_count)
-    app.route('/api/alert/<int:id>', methods=['GET'])(_get_alert)
-    app.route('/api/alert/<int:id>', methods=['DELETE'])(_delete_alert)
-    app.route('/api/alert/<int:id>', methods=['PUT'])(_update_alert)
-
+@a.route('/api/alert/<int:id>/notes', methods=['GET'])
+@common.require_login()
+def get_alert_notes(id):
+    notes = database.db.session.query(database.Note).filter(database.Note.alert_id == id).all()
+    return jsonify(notes)
