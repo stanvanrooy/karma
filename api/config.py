@@ -1,19 +1,12 @@
 import configparser
 import os
-
-from typing import Optional
 import dataclasses
-import enum
-
-
-class DatabaseProvider(enum.Enum):
-    SQLITE = "sqllite"
+from flask import Flask
 
 
 @dataclasses.dataclass
 class DatabaseConfig:
-    provider: DatabaseProvider
-    path: Optional[str]
+    uri: str
 
 
 @dataclasses.dataclass
@@ -26,20 +19,13 @@ def _load_config() -> Config:
     config = configparser.ConfigParser()
     config.read(path)
 
-    database_provider = config["database"]["provider"]
-    database_path = config["database"]["path"]
-
     database_config = DatabaseConfig(
-        provider=DatabaseProvider(database_provider),
-        path=database_path
+        uri=config["database"]["uri"]
     )
+
     return Config(database_config)
 
 
-__CONFIG = None
-def get_config() -> Config:
-    global __CONFIG
-    if __CONFIG is None:
-        __CONFIG = _load_config()
-    return __CONFIG
-
+def init_app(app: Flask):
+    config = _load_config()
+    app.config["SQLALCHEMY_DATABASE_URI"] = config.database.uri

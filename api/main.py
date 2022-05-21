@@ -1,20 +1,18 @@
-from flask import Flask, g
+from flask import Flask
 from flask_cors import CORS
+import database
+import config
 
 import routes
 
 app = Flask(__name__)
 CORS(app)
+config.init_app(app)
 
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-if __name__ == '__main__':
-    routes.alert.initialize_routes(app)
-    routes.note.initalize_routes(app)
-    app.run(debug=False, host='localhost')
+database.db.init_app(app)
+with app.app_context():
+    database.db.create_all()
+routes.alert.initialize_routes(app)
+routes.note.initalize_routes(app)
 
