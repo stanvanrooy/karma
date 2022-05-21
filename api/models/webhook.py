@@ -1,16 +1,6 @@
 import dataclasses
 from typing import List, Dict
-
-
-@dataclasses.dataclass
-class Alert:
-    status: str
-    labels: Dict[str, str]
-    annotations: Dict[str, str]
-    startsAt: str
-    endsAt: str
-    generatorURL: str
-
+from .alert import Alert
 
 @dataclasses.dataclass
 class Webhook:
