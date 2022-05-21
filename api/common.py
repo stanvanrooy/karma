@@ -24,7 +24,7 @@ def get_db():
     except Exception as e:
         pass
     try:
-        __db.execute("""CREATE TABLE notes (
+        g.__db.execute("""CREATE TABLE notes (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             alertId INTEGER, 
             text TEXT, 
