@@ -2,8 +2,7 @@ import {DefaultButton, Dropdown, IDropdownOption, mergeStyleSets} from "@fluentu
 import React, {useEffect, useMemo} from "react";
 import {useNavigate, useParams} from "react-router";
 import {AlertTimeline} from "../components/AlertTimeline";
-import {DateTimePicker} from "../components/DateTimePicker";
-import {Alert, AlertService} from "../services/alert.service";
+import {DateTimePicker} from "../components/DateTimePicker"; import {Alert, AlertService} from "../services/alert.service";
 import {Helpers} from "../services/helpers";
 
 export const AlertDetail: React.FC = () => {
@@ -90,6 +89,9 @@ export const AlertDetail: React.FC = () => {
     { key: 'false-positive', text: 'False positive' },
   ];
 
+  // This function 'debounces' the actual update request to send 1
+  // request per second, at most, instead of sending a request for every
+  // change.
   const update = (a: Alert) => {
     setAlert(a);
     clearTimeout(updateTimeout);

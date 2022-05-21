@@ -1,4 +1,5 @@
 import {BASE_API_URL} from "../constants";
+import {secureFetch} from "./secureFetch";
 
 export interface Note {
   id?: number;
@@ -9,28 +10,25 @@ export interface Note {
 
 export class NoteService {
   public static create(note: Note): Promise<Note> {
-    return fetch(`${BASE_API_URL}/note`, {
+    return secureFetch(`${BASE_API_URL}/note`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(note)
-    }).then(response => response.json());
+    });
   }
 
   public static getMany(id: number): Promise<Note[]> {
-    return fetch(`${BASE_API_URL}/alert/${id}/notes`)
-      .then(response => response.json());
+    return secureFetch(`${BASE_API_URL}/alert/${id}/notes`);
   }
 
   public static get(id: number): Promise<Note> {
-    return fetch(`${BASE_API_URL}/note/${id}`)
-      .then(response => response.json());
+    return secureFetch(`${BASE_API_URL}/note/${id}`);
   }
 
   public static count(): Promise<number> {
-    return fetch(`${BASE_API_URL}/note/count`)
-      .then(r => r.json())
+    return secureFetch(`${BASE_API_URL}/note/count`)
       .then(r => r.count);
   }
 }

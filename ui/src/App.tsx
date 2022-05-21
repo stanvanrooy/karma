@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import {mergeStyleSets} from '@fluentui/react';
 import {AlertOverview} from './pages/AlertOverview';
 import {AlertDetail} from './pages/AlertDetail';
+import {Login} from './pages/Login';
 
 
 export const App: React.FunctionComponent = () => {
@@ -38,6 +39,7 @@ export const App: React.FunctionComponent = () => {
         <Routes>
           <Route path="alerts" element={<AlertOverview />} />
           <Route path="alerts/:id" element={<AlertDetail />} />
+          <Route path="login" element={<Login />} />
         </Routes>
       </div>
     </BrowserRouter>
