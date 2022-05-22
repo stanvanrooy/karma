@@ -7,17 +7,6 @@ from . import common
 a = Blueprint('alert', __name__)
 
 
-@a.route('/', methods=['POST'])
-@common.require_login()
-def add_alert():
-    data = request.get_json()
-    database.db.session.add(database.Alert(
-        **data,
-    ))
-    database.db.session.commit()
-    return Response(status=200)
-
-
 @a.route('/', methods=['GET'])
 @common.require_login()
 def get_alerts():

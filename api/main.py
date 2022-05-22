@@ -13,10 +13,10 @@ app.secret_key = 'secret'
 app.register_blueprint(routes.alert.a, url_prefix='/api/alert')
 app.register_blueprint(routes.note.n, url_prefix='/api/note')
 app.register_blueprint(routes.auth.a, url_prefix='/api/auth')
+app.register_blueprint(routes.webhook.w, url_prefix='/api/webhook')
 
 CORS(app)
 config.init_app(app)
-
 
 database.db.init_app(app)
 with app.app_context():
@@ -26,5 +26,4 @@ with app.app_context():
         config = config.get_config()
         database.db.session.add(database.User(username='admin', password=auth.hash_password(config.admin.password)))
         database.db.session.commit()
-
 
