@@ -10,7 +10,8 @@ export const Navigation: React.FC<INavigationProps> = (props) => {
   const navProps: INavLinkGroup[] = useConst([{
     name: 'Karma',
     links: [
-      { key: 'alert-overview', name: 'Overview', url: '/alerts' }
+      { key: 'alert-overview', name: 'Overview', url: '/alerts' },
+      { key: 'webhooks', name: 'Webhooks', url: '/webhooks' },
     ]
   }]);
 

@@ -1,0 +1,41 @@
+import {DefaultButton, mergeStyleSets} from "@fluentui/react";
+import React from "react";
+import {Webhook} from "../services/webhook.service";
+import {card} from "./styles";
+
+export interface IWebhookCardProps {
+  webhook: Webhook,
+  onDelete: (webhook: Webhook) => void,
+}
+
+export const WebhookCard: React.FC<IWebhookCardProps> = (props) => {
+  const { webhook, onDelete } = props;
+
+  const styles = mergeStyleSets(card, 
+  {
+    card: {
+      alignItems: 'center'
+    }
+  },
+  {
+    container: {
+      display: "flex",
+      justifyContent: "space-between",
+    }
+  });
+
+  const openDetails = () => {
+
+  };
+
+  return <div onClick={_ => openDetails()} className={styles.card}>
+    <div className={styles.container}>
+      <h2>{webhook.name}</h2>
+      <DefaultButton
+        iconProps={{ iconName: 'Delete' }}
+        onClick={_ => onDelete(webhook)}
+      />
+    </div>
+  </div>
+}
+

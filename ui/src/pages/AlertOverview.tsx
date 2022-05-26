@@ -1,4 +1,4 @@
-import {Checkbox, mergeStyleSets, TextField} from "@fluentui/react";
+import {mergeStyleSets, TextField} from "@fluentui/react";
 import React, {useEffect, useMemo} from "react";
 import {AlertCard} from "../components/AlertCard";
 import {Pagination} from "../components/Pagination";

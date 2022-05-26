@@ -4,6 +4,7 @@ import {Alert, AlertService} from '../services/alert.service';
 import {Label} from './Label';
 import {useNavigate} from 'react-router-dom';
 import {Helpers} from '../services/helpers';
+import {common} from './styles';
 
 export interface IAlertCardProps {
   alert: Alert;
@@ -12,18 +13,8 @@ export interface IAlertCardProps {
 export const AlertCard: React.FC<IAlertCardProps> = (props) => {
   const {alert} = props;
 
-  const styles = mergeStyleSets({
-    alertCard: {
-      boxShadow: '4px 16px 15px -3px rgba(0,0,0,0.1)',
-      marginBottom: '16px',
-      padding: '16px',
-      backgroundColor: '#fff',
-      cursor: 'pointer',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px',
-    },
-    labelContainer: {
+  const styles = mergeStyleSets(common, {
+  labelContainer: {
       display: 'flex',
       flexDirection: 'row',
       gap: 10,
@@ -59,7 +50,7 @@ export const AlertCard: React.FC<IAlertCardProps> = (props) => {
     navigate(`/alerts/${alert.id}`);
   }
 
-  return <div onClick={_ => openDetails()} className={styles.alertCard}>
+  return <div onClick={_ => openDetails()} className={styles.card}>
     <div className={styles.headerContainer}>
       <h2>{title} ({status})</h2>
       <span className={'date'}>{date}</span>
