@@ -36,8 +36,10 @@ def _load_config() -> Config:
     return Config(database_config, admin_config)
 
 
-def init_app(app: Flask):
+def init_app(app: Flask, testing: bool):
     config = _load_config()
+    if testing:
+        config.database.uri = "sqlite:///:memory:"
     app.config["SQLALCHEMY_DATABASE_URI"] = config.database.uri
 
 

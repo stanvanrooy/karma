@@ -30,7 +30,7 @@ def login():
         return "Invalid user/password combination", 200
 
     token, refresh_token = _generate_tokens(username)
-    return jsonify({'token': token, 'refresh_token': refresh_token})
+    return jsonify({'access_token': token, 'refresh_token': refresh_token})
 
 
 def _generate_tokens(username: str):

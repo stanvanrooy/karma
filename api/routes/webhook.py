@@ -23,7 +23,7 @@ def add_alert(id):
     return '', 200
 
 
-@w.route('/', methods=['POST'])
+@w.route('', methods=['POST'])
 @common.require_login()
 def add_webhook():
     data = request.get_json()
@@ -39,7 +39,7 @@ def add_webhook():
     return jsonify(webhook.to_dict()), 201
 
 
-@w.route('/', methods=['GET'])
+@w.route('', methods=['GET'])
 @common.require_login()
 def get_webhooks():
     skip = int(request.args.get('skip', 0))
