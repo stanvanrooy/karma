@@ -3,7 +3,7 @@ import {BASE_API_URL} from "../constants";
 
 export class AuthService {
   public static login(username: string, password: string) {
-    return fetch(`${BASE_API_URL}/auth/login`, {
+    return fetch(`${BASE_API_URL}/1/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   private static setTokens(response: any) {
-    localStorage.setItem('access_token', response.token);
+    localStorage.setItem('access_token', response.access_token);
     localStorage.setItem('refresh_token', response.refresh_token);
   }
 }

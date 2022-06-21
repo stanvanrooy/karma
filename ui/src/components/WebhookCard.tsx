@@ -30,7 +30,7 @@ export const WebhookCard: React.FC<IWebhookCardProps> = (props) => {
   });
 
   const webhookUrl = useMemo(() => {
-    return `http://localhost:5000/api/webhook/${webhook.id}`;
+    return `http://localhost:5000/api/1/webhook/${webhook.id}`;
   }, [webhook]);
 
   const openDetails = () => {

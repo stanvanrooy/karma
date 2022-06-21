@@ -13,7 +13,7 @@ export const AlertDetail: React.FC = () => {
 
   useEffect(() => {
     if (id == null) return;
-    AlertService.get(Number(id)).then(setAlert);
+    AlertService.get(id).then(setAlert);
   }, [id])
 
   useEffect(() => {

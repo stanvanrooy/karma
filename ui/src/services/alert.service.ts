@@ -2,7 +2,7 @@ import {BASE_API_URL} from "../constants";
 import {secureFetch} from "./secureFetch";
 
 export interface Alert {
-  id: number;
+  id: string;
   annotations: any;
   labels: any;
   startsAt: string;
@@ -13,20 +13,20 @@ export interface Alert {
 
 export class AlertService {
   public static getMany(skip?: number, limit?: number, query?: string): Promise<Alert[]> {
-    return secureFetch(`${BASE_API_URL}/alert?skip=${skip}&limit=${limit}&query=${query}`);
+    return secureFetch(`${BASE_API_URL}/1/alert?skip=${skip}&limit=${limit}&query=${query}`);
   }
 
-  public static get(id: number): Promise<Alert> {
-    return secureFetch(`${BASE_API_URL}/alert/${id}`);
+  public static get(id: string): Promise<Alert> {
+    return secureFetch(`${BASE_API_URL}/1/alert/${id}`);
   }
 
   public static count(query?: string): Promise<number> {
-    return secureFetch(`${BASE_API_URL}/alert/count?query=${query}`)
+    return secureFetch(`${BASE_API_URL}/1/alert/count?query=${query}`)
       .then(r => r.count);
   }
 
   public static update(alert: Alert): Promise<Response> {
-    return secureFetch(`${BASE_API_URL}/alert/${alert.id}`, {
+    return secureFetch(`${BASE_API_URL}/1/alert/${alert.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -35,8 +35,8 @@ export class AlertService {
     });
   }
 
-  public static delete(id: number): Promise<Response> {
-    return secureFetch(`${BASE_API_URL}/alert/${id}`, {
+  public static delete(id: string): Promise<Response> {
+    return secureFetch(`${BASE_API_URL}/1/alert/${id}`, {
       method: 'DELETE'
     });
   }
